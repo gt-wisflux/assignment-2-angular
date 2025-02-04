@@ -4,4 +4,5 @@ Technologies used:
 - Angular
 - NestJs
 - Postgresql
+- Sequelize
 - Docker
