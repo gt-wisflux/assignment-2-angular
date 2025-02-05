@@ -1,6 +1,40 @@
-<form class="flex flex-col space-y-2 justify-center items-center">
-  <input type="text" placeholder="Username" />
-  <input type="email" placeholder="Email" />
-  <input type="password" placeholder="Password" />
-  <button class="px-3 py-2 bg-blue-700 w-[50%] font-semibold cursor-pointer text-white" type="submit">Signup</button>
+<form
+  (ngSubmit)="onSubmit()"
+  #signupForm="ngForm"
+  class="flex flex-col mt-10 space-y-2 justify-left items-center mx-auto"
+>
+  <!-- username field -->
+  <input
+    type="text"
+    id="username"
+    name="username"
+    placeholder="Username"
+    [(ngModel)]="username"
+    required
+  />
+  <!-- email field -->
+  <input
+    type="email"
+    id="email"
+    name="email"
+    placeholder="Email"
+    [(ngModel)]="email"
+    required
+  />
+  <!-- password field -->
+  <input
+    type="password"
+    id="password"
+    name="password"
+    placeholder="Password"
+    [(ngModel)]="password"
+    required
+  />
+  <button
+    class="px-3 py-2 bg-blue-700 w-[50%] font-semibold cursor-pointer text-white"
+    type="submit"
+    [disabled]="!signupForm.form.valid"
+  >
+    Signup
+  </button>
 </form>
