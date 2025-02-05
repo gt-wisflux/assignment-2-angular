@@ -1,5 +1,31 @@
-<form class="flex flex-col space-y-2 justify-center items-center">
-  <input type="email" placeholder="Email" />
-  <input type="password" placeholder="Password" />
-  <button class="px-3 py-2 bg-blue-700 w-[50%] font-semibold cursor-pointer text-white" type="submit">Login</button>
+<form
+  (ngSubmit)="onSubmit()"
+  #loginForm="ngForm"
+  class="flex flex-col mt-10 space-y-2 justify-left items-center mx-auto"
+>
+  <!-- email field -->
+  <input
+    type="email"
+    id="email"
+    name="email"
+    placeholder="Email"
+    [(ngModel)]="email"
+    required
+  />
+  <!-- password field -->
+  <input
+    type="password"
+    id="password"
+    name="password"
+    placeholder="Password"
+    [(ngModel)]="password"
+    required
+  />
+  <button
+    class="px-3 py-2 bg-blue-700 w-[50%] font-semibold cursor-pointer text-white"
+    type="submit"
+    [disabled]="!loginForm.form.valid"
+  >
+    Login
+  </button>
 </form>
