@@ -1,0 +1,33 @@
+<div class="max-w-lg mx-auto bg-white shadow-lg rounded-2xl p-6 mt-6">
+  <h2 class="text-2xl font-semibold text-gray-800 mb-4">Latest Order</h2>
+
+  <div class="text-gray-600 space-y-2">
+    <p><strong class="text-gray-800">Order ID:</strong> {{ latestOrder.id }}</p>
+    <p><strong class="text-gray-800">User ID:</strong> {{ latestOrder.userId }}</p>
+    <p><strong class="text-gray-800">Total Price:</strong>Rs. {{ latestOrder.totalPrice }}</p>
+    <p><strong class="text-gray-800">Status:</strong> 
+      <span [ngClass]="{
+        'text-green-500': latestOrder.status === 'completed',
+        'text-yellow-500': latestOrder.status === 'pending'
+      }">
+        {{ latestOrder.status }}
+      </span>
+    </p>
+    <p><strong class="text-gray-800">Order Date:</strong> {{ latestOrder.orderDate | date: 'medium' }}</p>
+  </div>
+
+  <h3 class="text-lg font-semibold text-gray-800 mt-4">Items:</h3>
+  <ul class="mt-2 space-y-2">
+    <li *ngFor="let item of latestOrder.items" class="bg-gray-100 p-3 rounded-lg">
+      <p><strong>Size:</strong> {{ item.size }}</p>
+      <p><strong>Ingredients:</strong> {{ item.ingredients.join(', ') }}</p>
+    </li>
+  </ul>
+
+  <button 
+    (click)="checkout()" 
+    *ngIf="latestOrder.status === 'pending'" 
+    class="mt-4 px-4 py-2 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 transition">
+    Confirm Order
+  </button>
+</div>

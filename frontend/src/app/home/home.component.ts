@@ -5,7 +5,7 @@ import { PizzaComponent } from "../pizza/pizza.component";
   selector: "app-home",
   imports: [PizzaComponent],
   templateUrl: "./home.component.html",
-  styleUrl: './home.component.css'
+  styleUrl: "./home.component.css",
 })
 export class HomeComponent {
   title = "Home Page";
