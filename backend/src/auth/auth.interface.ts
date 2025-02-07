@@ -10,6 +10,7 @@ export interface ILoginRequest {
 }
 
 export interface ILoginResponse {
+  userId: number;
   message: string;
   access_token: string;
 }

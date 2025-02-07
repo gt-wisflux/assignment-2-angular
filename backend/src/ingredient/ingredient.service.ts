@@ -5,7 +5,7 @@ import { Ingredient } from './ingredient.model';
 @Injectable()
 export class IngredientService {
   constructor(
-    @InjectModel(Ingredient) private readonly ingredientModel: typeof Ingredient,
+    @InjectModel(Ingredient) private ingredientModel: typeof Ingredient,
   ) {}
   
   getAllIngredients() {

@@ -5,19 +5,19 @@ export = {
     const ingredients = [
       {
         name: 'Mozzarella Cheese',
-        price: 1.5,
+        price: 1,
       },
       {
         name: 'Tomato',
-        price: 2.5,
+        price: 2,
       },
       {
         name: 'Basil',
-        price: 3.5,
+        price: 3,
       },
       {
         name: 'Pepperoni',
-        price: 4.5,
+        price: 4,
       },
     ];
     

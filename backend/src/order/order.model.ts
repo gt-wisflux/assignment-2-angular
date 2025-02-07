@@ -1,6 +1,6 @@
-import { Column, Model, Table, DataType } from "sequelize-typescript";
+import { Column, Model, Table, DataType } from 'sequelize-typescript';
 
-@Table({tableName: 'orders', timestamps: true})
+@Table({ tableName: 'orders', timestamps: true })
 export class Order extends Model<Order> {
   @Column({
     type: DataType.INTEGER,
@@ -20,6 +20,16 @@ export class Order extends Model<Order> {
     allowNull: false,
   })
   totalPrice: number;
+
+  @Column({
+    type: DataType.JSONB,
+    allowNull: false,
+    defaultValue: [],
+  })
+  items: {
+    size: string;
+    ingredients: string[];
+  }[];
 
   @Column({
     type: DataType.ENUM('pending', 'processing', 'completed', 'cancelled'),

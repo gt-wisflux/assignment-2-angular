@@ -64,10 +64,11 @@ export class AuthService {
         throw new BadRequestException('Password is incorrect');
       }
 
-      const payload = { email: user.email, id: user.id };
+      const payload = { email: user.email };
       const token = this.jwtService.sign(payload);
 
       return {
+        userId: user.id,
         message: 'Login successful',
         access_token: token,
       };
