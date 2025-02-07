@@ -41,7 +41,7 @@ export class CartComponent implements OnInit {
       },
       error: (e) => {
         this.loading = false;
-        this.errorMessage = "Failed to fetch cart. Please try again later."; // Handle error
+        this.errorMessage = "No cart found. First login";
         console.error(e); // Log the error
       },
     });

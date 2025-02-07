@@ -1,3 +1,7 @@
+<p *ngIf="errorMessage" class="text-center text-red-500 font-semibold">
+  {{ errorMessage }}
+</p>
+
 <form
   (ngSubmit)="onSubmit()"
   #loginForm="ngForm"
@@ -29,3 +33,7 @@
     Login
   </button>
 </form>
+<p class="mt-2 text-center">
+  If not registered then
+  <a class="text-blue-500 underline cursor-pointer" href="/signup">signup</a>
+</p>
