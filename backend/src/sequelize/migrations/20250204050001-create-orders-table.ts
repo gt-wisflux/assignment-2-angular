@@ -2,7 +2,7 @@ import { QueryInterface, DataTypes } from 'sequelize';
 
 export = {
   up: async (queryInterface: QueryInterface): Promise<void> => {
-    await queryInterface.createTable('ingredients', {
+    await queryInterface.createTable('orders', {
       id: {
         type: DataTypes.INTEGER,
         allowNull: false,
@@ -10,29 +10,39 @@ export = {
         unique: true,
         primaryKey: true,
       },
-      name: {
-        type: DataTypes.STRING,
+      userId: {
+        type: DataTypes.INTEGER,
         allowNull: false,
-        unique: true,  // Prevent duplicate ingredient names
+        references: {
+          model: 'users',
+          key: 'id',
+        },
+        onDelete: 'CASCADE', // Delete orders if the user is deleted
+        onUpdate: 'CASCADE',
       },
-      price: {
+      totalPrice: {
         type: DataTypes.INTEGER,
         allowNull: false,
       },
+      status: {
+        type: DataTypes.ENUM('pending', 'processing', 'completed', 'cancelled'),
+        allowNull: false,
+        defaultValue: 'pending',
+      },
       createdAt: {
         type: DataTypes.DATE,
-        allowNull: true,
+        allowNull: false,
         defaultValue: DataTypes.NOW,
       },
       updatedAt: {
         type: DataTypes.DATE,
-        allowNull: true,
+        allowNull: false,
         defaultValue: DataTypes.NOW,
       },
     });
   },
 
   down: async (queryInterface: QueryInterface): Promise<void> => {
-    await queryInterface.dropTable('ingredients');
+    await queryInterface.dropTable('orders');
   },
 };

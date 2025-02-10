@@ -13,7 +13,6 @@ export = {
       name: {
         type: DataTypes.STRING,
         allowNull: false,
-        unique: true,  // Prevent duplicate ingredient names
       },
       price: {
         type: DataTypes.INTEGER,

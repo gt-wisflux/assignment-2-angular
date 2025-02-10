@@ -1,4 +1,6 @@
-import { Column, Model, Table, DataType } from "sequelize-typescript";
+import { Column, Model, Table, DataType, HasOne, HasMany } from "sequelize-typescript";
+import { Cart } from '../cart/cart.model';
+import { Order } from '../order/order.model';
 
 @Table({tableName: 'users'}) 
 export class User extends Model<User> { 
@@ -20,4 +22,12 @@ export class User extends Model<User> {
     allowNull: false
   })
   password: string
+  
+  // One to one
+  @HasOne(() => Cart)
+  cart: Cart
+  
+  // One to Many
+  @HasMany(() => Order)
+  orders: Order[]
 }

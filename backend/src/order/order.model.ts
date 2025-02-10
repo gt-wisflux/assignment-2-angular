@@ -1,35 +1,18 @@
-import { Column, Model, Table, DataType } from 'sequelize-typescript';
+import { Column, Model, Table, DataType, ForeignKey, BelongsTo, HasMany } from 'sequelize-typescript';
+import { User } from '../auth/user.model';
+import { OrderItem } from '../link_tables/orderItem.model';
 
 @Table({ tableName: 'orders', timestamps: true })
 export class Order extends Model<Order> {
-  @Column({
-    type: DataType.INTEGER,
-    autoIncrement: true,
-    primaryKey: true,
-  })
-  id: number;
-
-  @Column({
-    type: DataType.INTEGER,
-    allowNull: false,
-  })
+  @ForeignKey(() => User)
+  @Column
   userId: number;
 
-  @Column({
-    type: DataType.DECIMAL(10, 2),
-    allowNull: false,
-  })
-  totalPrice: number;
+  @BelongsTo(() => User)
+  user: User;
 
-  @Column({
-    type: DataType.JSONB,
-    allowNull: false,
-    defaultValue: [],
-  })
-  items: {
-    size: string;
-    ingredients: string[];
-  }[];
+  @Column
+  totalPrice: number;
 
   @Column({
     type: DataType.ENUM('pending', 'processing', 'completed', 'cancelled'),
@@ -37,11 +20,7 @@ export class Order extends Model<Order> {
     allowNull: false,
   })
   status: string;
-
-  @Column({
-    type: DataType.DATE,
-    defaultValue: DataType.NOW,
-    allowNull: false,
-  })
-  orderDate: Date;
+  
+  @HasMany(() => OrderItem)
+  orderItems: OrderItem[];
 }

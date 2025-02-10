@@ -1,25 +1,15 @@
-import { Column, Model, Table, DataType } from "sequelize-typescript";
+import { Column, Model, Table, BelongsToMany } from "sequelize-typescript";
+import { Item } from '../item/item.model';
+import { ItemIngredient } from '../link_tables/itemIngredient.model';
 
-@Table({tableName: 'ingredients'}) 
-export class Ingredient extends Model<Ingredient> { 
-  @Column({
-    type: DataType.STRING,
-    allowNull: false,
-    unique: true,
-    primaryKey: true 
-  })
-  id: number
-  
-  @Column({
-    type: DataType.STRING,
-    allowNull: false,
-    unique: true
-  })
+@Table({ tableName: 'ingredients' })
+export class Ingredient extends Model<Ingredient> {
+  @Column
   name: string
 
-  @Column({
-    type: DataType.INTEGER,
-    allowNull: false
-  })
+  @Column
   price: number
+  
+  @BelongsToMany(() => Item, () => ItemIngredient)
+  items: Item[];
 }

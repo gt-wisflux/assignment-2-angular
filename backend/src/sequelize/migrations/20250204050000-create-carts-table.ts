@@ -1,8 +1,9 @@
+//'use strict';
 import { QueryInterface, DataTypes } from 'sequelize';
 
 export = {
-  up: async (queryInterface: QueryInterface): Promise<void> => {
-    await queryInterface.createTable('ingredients', {
+  up: async (queryInterface: QueryInterface) => {
+    await queryInterface.createTable('carts', {
       id: {
         type: DataTypes.INTEGER,
         allowNull: false,
@@ -10,13 +11,20 @@ export = {
         unique: true,
         primaryKey: true,
       },
-      name: {
-        type: DataTypes.STRING,
-        allowNull: false,
-        unique: true,  // Prevent duplicate ingredient names
-      },
-      price: {
+      userId: {
         type: DataTypes.INTEGER,
+        allowNull: false,
+        unique: true, // Ensures one-to-one relation (one user, one cart)
+        references: {
+          model: 'users',
+          key: 'id',
+        },
+        onDelete: 'CASCADE', // Delete cart if the user is deleted
+        onUpdate: 'CASCADE',
+      },
+      totalPrice: {
+        type: DataTypes.INTEGER,
+        defaultValue: 0,
         allowNull: false,
       },
       createdAt: {
@@ -32,7 +40,7 @@ export = {
     });
   },
 
-  down: async (queryInterface: QueryInterface): Promise<void> => {
-    await queryInterface.dropTable('ingredients');
+  down: async (queryInterface: QueryInterface) => {
+    await queryInterface.dropTable('carts');
   },
 };

@@ -13,6 +13,9 @@ import { CartModule } from './cart/cart.module';
 import { Cart } from './cart/cart.model';
 import { Item} from './item/item.model'
 import { ItemModule } from './item/item.module';
+import { ItemIngredient } from './link_tables/itemIngredient.model';
+import { OrderItem } from './link_tables/orderItem.model';
+import { CartItem } from './link_tables/cartItem.model';
 /* if env not working then import dotenv */
 
 @Module({
@@ -20,7 +23,7 @@ import { ItemModule } from './item/item.module';
     ConfigModule.forRoot({ isGlobal: true }),
     SequelizeModule.forRoot({
       uri: process.env.DB_URL,
-      models: [User, Order, Ingredient, Cart, Item],
+      models: [User, Order, Ingredient, Cart, Item, ItemIngredient, OrderItem, CartItem],
     }),
     AuthModule,
     OrderModule,

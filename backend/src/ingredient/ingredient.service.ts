@@ -7,8 +7,8 @@ export class IngredientService {
   constructor(
     @InjectModel(Ingredient) private ingredientModel: typeof Ingredient,
   ) {}
-  
+
   getAllIngredients() {
-    return this.ingredientModel.findAll(); 
+    return this.ingredientModel.findAll();
   }
 }

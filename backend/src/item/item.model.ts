@@ -1,32 +1,35 @@
-import { Column, Model, Table, DataType,AutoIncrement} from 'sequelize-typescript';
+import {
+  Column,
+  Model,
+  Table,
+  DataType,
+  ForeignKey,
+  BelongsTo,
+  BelongsToMany,
+} from 'sequelize-typescript';
+import { Ingredient } from '../ingredient/ingredient.model';
+import { ItemIngredient } from 'src/link_tables/itemIngredient.model';
+import { Cart } from 'src/cart/cart.model';
 
 @Table({ tableName: 'items' })
 export class Item extends Model<Item> {
-  @AutoIncrement
-  @Column({
-    type: DataType.INTEGER,
-    allowNull: false,
-    unique: true,
-    primaryKey: true,
-  })
-  id: number;
-  
-  @Column({
-    type: DataType.STRING,
-    allowNull: false,
-    unique: true,
-  })
-  cartId: string;
-  
-  @Column({
-    type: DataType.STRING,
-    allowNull: false,
-  })
+  // pizza size
+  @Column
   size: string;
+
+  @Column
+  price: number;
   
-  @Column({
-    type: DataType.STRING,
-    allowNull: false,
-  })
-  ingredientId: string;
+  @Column
+  sizePrice: number;
+
+  @ForeignKey(() => Cart)
+  @Column
+  cartId: number;
+
+  @BelongsTo(() => Cart)
+  cart: Cart;
+
+  @BelongsToMany(() => Ingredient, () => ItemIngredient)
+  ingredients: Ingredient[];
 }

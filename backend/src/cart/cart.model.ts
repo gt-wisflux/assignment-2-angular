@@ -2,41 +2,30 @@ import {
   Column,
   Model,
   Table,
-  DataType,
-  AutoIncrement,
+  HasMany,
+  ForeignKey,
+  BelongsTo,
 } from 'sequelize-typescript';
+import { User } from 'src/auth/user.model';
+import { Item } from 'src/item/item.model';
+import { CartItem } from '../link_tables/cartItem.model';
 
 @Table({ tableName: 'carts' })
 export class Cart extends Model<Cart> {
-  @AutoIncrement
-  @Column({
-    type: DataType.INTEGER,
-    allowNull: false,
-    unique: true,
-    primaryKey: true,
-  })
-  id: number;
-
-  @Column({
-    type: DataType.INTEGER,
-    allowNull: true,
-    unique: true,
-  })
+  // Foreign key linking to user
+  @ForeignKey(() => User)
+  @Column
   userId: number;
 
-  @Column({
-    type: DataType.INTEGER,
-    allowNull: false,
-  })
+  @Column
   totalPrice: number;
 
-  @Column({
-    type: DataType.JSONB, // Or DataType.ARRAY for PostgreSQL
-    allowNull: false,
-    defaultValue: [],
-  })
-  items: {
-    size: string;
-    ingredients: string[];
-  }[]; // You can type this more specifically, e.g., Item[] if you have a defined interface
+  @BelongsTo(() => User)
+  user: User;
+  
+  @HasMany(() => Item)
+  items: Item[];
+
+  @HasMany(() => CartItem)
+  cartItems: CartItem[];
 }
