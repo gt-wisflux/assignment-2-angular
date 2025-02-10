@@ -27,8 +27,7 @@
     <div class="flex flex-col">
       <p>Size selected: {{ selectedSize }}</p>
     </div>
-    
-    
+
     <!-- <div class="mb-6" *ngIf="getSelectedIngredients().length > 0">
       <h4 class="text-lg font-medium mb-2">Selected Ingredients:</h4>
       <div class="flex flex-wrap gap-2">
@@ -52,9 +51,9 @@
             type="checkbox"
             [id]="ingredient.id"
             [value]="ingredient.name"
-            [(ngModel)]="selectedIngredients[ingredient.name]"
-            name="ingredient.name"
-            (ngModelChange)="onIngredientChange()"
+            [checked]="isIngredientSelected(ingredient.id)"
+            (change)="onIngredientToggle($event, ingredient)"
+            [name]="'ingredient-' + ingredient.name"
           />
           <label [for]="ingredient.id" class="capitalize"
             >{{ ingredient.name }}:(Rs{{ ingredient.price }})</label
@@ -63,26 +62,25 @@
       </div>
     </div>
 
-
     <!-- Price Summary -->
     <div class="mt-6 p-4 bg-gray-50 rounded-lg">
       <h3 class="text-lg font-semibold mb-2">Order Summary</h3>
       <div class="space-y-2">
         <div class="flex justify-between">
-          <span>Base Price ({{selectedSize}} pizza):</span>
-          <span>Rs.{{getBasePrice()}}</span>
+          <span>Base Price ({{ selectedSize }} pizza):</span>
+          <span>Rs.{{ getBasePrice() }}</span>
         </div>
         <div class="flex justify-between">
           <span>Ingredients:</span>
-          <span>Rs.{{getIngredientsPrice()}}</span>
+          <span>Rs.{{ getIngredientsPrice() }}</span>
         </div>
         <div class="border-t pt-2 font-semibold flex justify-between">
           <span>Total Price:</span>
-          <span>Rs.{{calculateTotalPrice()}}</span>
+          <span>Rs.{{ calculateTotalPrice() }}</span>
         </div>
       </div>
     </div>
-    
+
     <div class="flex flex-row">
       <button
         type="button"

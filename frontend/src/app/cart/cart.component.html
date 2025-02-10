@@ -9,48 +9,43 @@
   <p>{{ errorMessage }}</p>
 </div>
 
-<div
-  *ngIf="cart"
-  class="max-w-2xl mx-auto bg-white shadow-lg rounded-2xl p-6 mt-6"
->
-  <h2 class="text-2xl font-bold text-gray-800 mb-4">
-    Cart for User ID: <span class="text-blue-600">{{ cart.userId }}</span>
-  </h2>
+<!-- cart-details.component.html -->
+<div class="max-w-3xl mx-auto p-6 bg-white shadow-lg rounded-xl">
+  <h2 class="text-2xl font-bold text-gray-800 mb-4">Cart Details</h2>
 
-  <div class="mb-4 text-lg">
-    <strong class="text-gray-700">Total Price:</strong>
-    <span class="text-green-600 font-semibold">Rs. {{ cart.totalPrice }}</span>
+  <div class="border-b pb-4 mb-4">
+    <p><span class="font-semibold">Cart ID:</span> {{ cart?.id }}</p>
+    <p>
+      <span class="font-semibold">Total Price:</span> Rs.{{ cart?.totalPrice }}
+    </p>
   </div>
 
-  <h3 class="text-xl font-semibold text-gray-700 mb-2">Items:</h3>
+  <h3 class="text-xl font-semibold mb-2">Cart Items</h3>
   <div
-    *ngFor="let item of cart.items"
-    class="border rounded-lg p-4 mb-4 bg-gray-50"
+    *ngFor="let cartItem of cart?.cartItems"
+    class="p-3 border rounded-lg mb-2"
   >
-    <div class="mb-2">
-      <strong class="text-gray-700">Size:</strong>
-      <span class="text-gray-900">{{ item.size }}</span>
-    </div>
+    <p><span class="font-semibold">Item ID:</span> {{ cartItem?.item?.id }}</p>
+    <p><span class="font-semibold">Size:</span> {{ cartItem?.item?.size }} (Rs. {{cartItem?.item?.sizePrice}})</p>
+    <p>
+      <span class="font-semibold">Price:</span> Rs.{{ cartItem?.item?.price }}
+    </p>
 
-    <div>
-      <strong class="text-gray-700">Ingredients:</strong>
-      <ul class="list-disc list-inside text-gray-600">
-        <li *ngFor="let ingredient of item.ingredients || []" class="ml-4">
-          {{ ingredient }}
-        </li>
-      </ul>
-    </div>
+    <h4 class="text-lg font-semibold mt-2">Ingredients</h4>
+    <ul>
+      <li
+        *ngFor="let ingredient of cartItem?.item?.ingredients"
+        class="ml-4 list-disc"
+      >
+        <span class="font-semibold">{{ ingredient?.name }}</span
+        >: Rs. {{ ingredient?.price }}
+      </li>
+    </ul>
   </div>
 
-  <div class="timestamps text-gray-600 mt-4 border-t pt-4">
-    <p><strong>Created At:</strong> {{ cart.createdAt | date: "fullDate" }}</p>
-    <p><strong>Updated At:</strong> {{ cart.updatedAt | date: "fullDate" }}</p>
-  </div>
-
-  <!-- Buy Items Button -->
   <button
     (click)="buyItems()"
-    class="w-full mt-6 bg-blue-600 text-white text-lg font-semibold py-3 rounded-xl hover:bg-blue-700 transition duration-300"
+    class="w-full mt-4 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg"
   >
     Buy Items
   </button>

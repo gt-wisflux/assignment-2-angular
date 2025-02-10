@@ -12,7 +12,7 @@ import { Router } from "@angular/router";
 })
 export class CheckoutComponent implements OnInit {
   
-  latestOrder: any = [];
+  order: any = [];
 
   constructor(
     private http: HttpClient,
@@ -28,8 +28,8 @@ export class CheckoutComponent implements OnInit {
   async fetchLatestOrderByUserId(userId: number): Promise<void> {
     this.http.get(`http://localhost:4000/order/latestOrder/${userId}`).subscribe({
       next: (res) => {
-        console.log("Order fetched successfully", res);
-        this.latestOrder = res;
+        console.log("latest order fetched successfully", res);
+        this.order = res;
       },
       error: (e) => {
         console.error("Failed to fetch order", e);
@@ -39,10 +39,10 @@ export class CheckoutComponent implements OnInit {
   
   checkout(): void {
     this.http.post(`http://localhost:4000/order/checkout/${parseInt(this.authService.getUserId()!)}`, {}).subscribe({
-      next: (res) => {
+      next: async (res) => {
         console.log("Order checked out successfully", res);
         window.location.reload();
-        //this.router.navigate(["order/all"]);
+        await this.router.navigate(["order/all"]);
       },
       error: (e) => {
         console.error("Failed to checkout order", e);

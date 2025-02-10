@@ -10,6 +10,12 @@ interface IPizzaSize {
   price: number;
 }
 
+interface Ingredient {
+  id: number;
+  name: string;
+  price: number;
+}
+
 @Component({
   selector: "app-pizza",
   imports: [FormsModule, CommonModule],
@@ -18,20 +24,31 @@ interface IPizzaSize {
 })
 export class PizzaComponent implements OnInit {
   totalPrice: number = 0;
+  totalPriceOfIngredients: number = 0;
   selectedSize: string = "";
   sizes: IPizzaSize[] = [
     { id: "small", price: 8 },
     { id: "medium", price: 10 },
     { id: "large", price: 12 },
   ];
-  ingredients: any[] = [];
-  selectedIngredients: { [key: string]: boolean } = {};
+  ingredients: Ingredient[] = [];
   isLoggedIn: boolean = false;
+  //selectedIngredients: { [key: string]: boolean } = {};
 
-  getSelectedIngredients(): string[] {
-    return Object.entries(this.selectedIngredients)
-      .filter(([_, selected]) => selected)
-      .map(([topping, _]) => topping);
+  selectedIngredients: { [key: number]: Ingredient } = {};
+
+  //getSelectedIngredients(): string[] {
+  //  return Object.entries(this.selectedIngredients)
+  //    .filter(([_, selected]) => selected)
+  //    .map(([topping, _]) => topping);
+  //}
+
+  getSelectedIngredients(): Ingredient[] {
+    return Object.values(this.selectedIngredients);
+  }
+
+  logSelectedIngredients() {
+    console.log(this.getSelectedIngredients());
   }
 
   constructor(
@@ -48,6 +65,48 @@ export class PizzaComponent implements OnInit {
 
   // Modified to handle ingredient selection
   onIngredientChange(): void {
+    this.calculateTotalPrice();
+    this.logSelectedIngredients();
+  }
+
+  //onIngredientToggle(ingredient: Ingredient) {
+  //  if (this.selectedIngredients[ingredient.id]) {
+  //    // If ingredient is already selected, remove it
+  //    delete this.selectedIngredients[ingredient.id];
+  //  } else {
+  //    // If ingredient is not selected, add it
+  //    this.selectedIngredients[ingredient.id] = ingredient;
+  //  }
+
+  //  // If you still need this method for other calculations
+  //  this.onIngredientChange();
+  //}
+
+  isIngredientSelected(ingredientId: number): boolean {
+    return (
+      this.selectedIngredients &&
+      this.selectedIngredients[ingredientId] !== undefined
+    );
+  }
+
+  onIngredientToggle(event: Event, ingredient: Ingredient) {
+    const checkbox = event.target as HTMLInputElement; // ✅ Type assertion in TypeScript
+    const isChecked = checkbox.checked;
+
+    if (isChecked) {
+      this.selectedIngredients[ingredient.id] = {
+        id: ingredient.id,
+        name: ingredient.name,
+        price: ingredient.price,
+      };
+    } else {
+      delete this.selectedIngredients[ingredient.id];
+    }
+
+    // Ensure change detection updates the UI
+    this.selectedIngredients = { ...this.selectedIngredients };
+
+    // Update total price
     this.calculateTotalPrice();
   }
 
@@ -76,10 +135,14 @@ export class PizzaComponent implements OnInit {
   }
 
   getIngredientsPrice(): number {
-    const ingredientsPrice = this.ingredients
-      .filter((ingredient) => this.selectedIngredients[ingredient.name])
-      .reduce((total, ingredient) => total + Number(ingredient.price), 0);
-    return ingredientsPrice;
+    const total = Object.values(this.selectedIngredients)
+      .filter((ingredient) => ingredient !== undefined) // Ensure we have valid ingredients
+      .reduce((sum, ingredient) => {
+        return sum + (ingredient?.price || 0);
+      }, 0);
+
+    // Force change detection if needed
+    return Number(total);
   }
 
   calculateTotalPrice(): number {
@@ -113,15 +176,17 @@ export class PizzaComponent implements OnInit {
     }
 
     const formData = {
-      userId: this.authService.getUserId(),
+      userId: Number(this.authService.getUserId()),
       totalPrice: this.totalPrice,
       items: [
         {
           size: this.selectedSize,
+          sizePrice: this.getBasePrice(),
+          price: this.getIngredientsPrice(),
           ingredients:
             this.getSelectedIngredients().length > 0
               ? this.getSelectedIngredients()
-              : ["No ingredients selected"], // Default value
+              : [], // It's better to send an empty array than a default string
         },
       ],
     };
@@ -138,6 +203,7 @@ export class PizzaComponent implements OnInit {
       return;
     }
     const formData = this.gatherFormData();
+    console.log("Form Data", formData);
     this.http.post("http://localhost:4000/cart/add", formData).subscribe({
       next: (res) => {
         console.log("Item added to cart", res);

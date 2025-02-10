@@ -20,13 +20,11 @@ export class CartComponent implements OnInit {
   constructor(
     private http: HttpClient,
     private authService: AuthService,
-    private router: Router
+    private router: Router,
   ) {}
 
   ngOnInit(): void {
-    // Fetch cart data on component initialization
     this.fetchCartByUserId(parseInt(this.authService.getUserId()!));
-    //console.log(this.authService.getUserId())
   }
 
   // Method to fetch the cart by userId
@@ -37,6 +35,7 @@ export class CartComponent implements OnInit {
     this.http.get(`http://localhost:4000/cart/${userId}`).subscribe({
       next: (res) => {
         this.cart = res; // Assign the response data to the cart variable
+        console.log("Cart fetched successfully", res);
         this.loading = false; // Set loading to false after data is received
       },
       error: (e) => {
@@ -46,24 +45,53 @@ export class CartComponent implements OnInit {
       },
     });
   }
-  
+
+  async clearCartItems(): Promise<void> {
+    this.http
+      .post(`http://localhost:4000/cart/clear/${this.cart.id}`, {})
+      .subscribe({
+        next: (res) => {
+          console.log(res);
+          this.loading = false;
+        },
+        error: (e) => {
+          this.loading = false;
+          this.errorMessage = "Failed to clear cart items. Please try again.";
+          console.error(e);
+        },
+      });
+  }
+
   // Method to buy items in the cart
   buyItems(): void {
-    if (!this.cart || !this.cart.items || this.cart.items.length === 0) {
-      this.errorMessage = "Cart is empty. Please add items to cart before buying.";
+    if (!this.cart || !this.cart.cartItems || this.cart.cartItems.length === 0) {
+      this.errorMessage =
+        "Cart is empty. Please add items to cart before buying.";
       alert(this.errorMessage);
       return;
     }
     this.loading = true;
     this.errorMessage = "";
 
-    this.http.post(`http://localhost:4000/order/create`, {
-      userId: parseInt(this.authService.getUserId()!),
-    }).subscribe({
-      next: (res) => {
-        console.log(res)
+    const orderData = {
+      userId: parseInt(this.authService.getUserId()!), // Convert user ID to number
+      totalPrice: this.cart.totalPrice, // Include total price
+      cartId: this.cart.id, // Include cart ID
+      orderItems: this.cart.cartItems.map((item: any) => ({
+        itemId: item.id,
+        itemSize: item.size,
+        itemPrice: item.price,
+      })), 
+    };
+
+    console.log("Order data", orderData);
+
+    this.http.post(`http://localhost:4000/order/create`, orderData).subscribe({
+      next: async (res) => {
+        console.log(res);
         this.loading = false;
-        alert('Order Created Successfully Press Ok to check!')
+        alert("Order Created Successfully Press Ok to check!");
+        await this.clearCartItems();
         this.router.navigate(["/order/checkout"]); // Navigate to the order/checkout page
       },
       error: (e) => {

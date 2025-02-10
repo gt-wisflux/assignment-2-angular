@@ -10,7 +10,7 @@ import { AuthService } from '../../auth/auth.service';
   styleUrl: './all-orders.component.css'
 })
 export class AllOrdersComponent implements OnInit{
-  orders: any = [];
+  pastOrders: any = [];
   constructor(
     private http: HttpClient,
     private authService: AuthService,
@@ -25,7 +25,7 @@ export class AllOrdersComponent implements OnInit{
     this.http.get(`http://localhost:4000/order/${userId}`).subscribe({
       next: (res) => {
         console.log("Orders fetched successfully", res);
-        this.orders = res;
+        this.pastOrders = res;
       },
       error: (e) => {
         console.error("Failed to fetch orders", e);
